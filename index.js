@@ -29,18 +29,18 @@ async function runDB() {
   mongoose.Promise = global.Promise;
 
   console.log(config.db.uri);
-  // await mongoose.connect(config.db.uri, { useUnifiedTopology: true })
-  setTimeout(() => {
-    mongoose
-      .connect(config.db.uri, { useNewUrlParser: true } )
-      .then(() => {
-        console.log("connected");
-      })
-      .catch(err => {
-        console.log("Error on connect");
-        console.info(err);
-      });
-  }, 3000);
+  await mongoose.connect(config.db.uri, { useUnifiedTopology: true })
+  // setTimeout(() => {
+  //   mongoose
+  //     .connect(config.db.uri, { useNewUrlParser: true })
+  //     .then(() => {
+  //       console.log("connected");
+  //     })
+  //     .catch(err => {
+  //       console.log("Error on connect");
+  //       console.info(err);
+  //     });
+  // }, 3000);
 }
 server.listen(config.port, () => {
   runDB().catch(err => {
