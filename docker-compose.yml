@@ -1,20 +1,18 @@
-version: "2"
-services:
-  app:
-    container_name: app
-    restart: always
+  web:
+    container_name: tuto_node
     build: .
     ports:
-      - "5000:5000"
+    - "3000:3000"
     links:
-      - "mongo"
+    - mongo
     environment:
-      - MONGODB_URI=172.17.0.2
-
+      - MONGODB_URI=mongo
+    command: node /usr/src/app/index.js
+    volumes: 
+    - ./:/usr/src/app
   mongo:
     container_name: mongo
     image: mongo
-    volumes:
-      - ./data:/data/db
     ports:
-      - "27017:27017"
+    - "27017:27017"
+    restart: always
