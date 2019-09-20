@@ -1,0 +1,19 @@
+  web:
+    container_name: tuto_node
+    build: .
+    restart: always
+    ports:
+    - "5000:5000"
+    links:
+    - mongo
+    environment:
+      - MONGODB_URI=mongo
+    command: node /usr/src/app/index.js
+    volumes: 
+    - ./:/usr/src/app
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+    - "27017:27017"
+    restart: always

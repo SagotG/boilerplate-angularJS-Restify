@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <div class="container">
+    <div class="card">
+      <form>
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-11">
+              <h1>Create task</h1>
+            </div>
+            <div class="col-sm-1">
+              <button
+                ng-click="redirect('/list')"
+                style="border-radius: 25px"
+                class="btn btn-primary btn-round"
+              >
+                <-
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div ng-if="isCreate" class="alert alert-success" role="alert">
+                Your task have been created.
+              </div>
+              <div class="form-group ">
+                <div class="inputText">Task name</div>
+                <input type="text" ng-model="task" class="form-control" />
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group">
+                <div class="inputText">Details</div>
+                <textarea type="text" ng-model="status" class="form-control">
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <input
+                ng-show="edit"
+                type="submit"
+                name=""
+                class="btn btn-block btn-primary mb-3"
+                value="Send Message"
+                ng-click="submitForm()"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

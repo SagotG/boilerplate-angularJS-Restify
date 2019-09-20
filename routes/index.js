@@ -1,17 +1,6 @@
 const errors = require("restify-errors");
-const restifyPromise = require("restify-await-promise");
-const restifyAsyncWrap = require("@gilbertco/restify-async-wrap");
 
 const Todo = require("../models/todo");
-
-const wrap = function(fn) {
-  return function(req, res, next) {
-    console.log("Wrap : ", res.params);
-    return fn(req, res, next).catch(function(err) {
-      return next(err);
-    });
-  };
-};
 
 module.exports = function(server) {
   server.post("/todos", (req, res, next) => {
@@ -28,32 +17,24 @@ module.exports = function(server) {
         console.error(err);
         return next(new errors.InternalError(err.message));
       }
-
+      doc.message = 'Done'
       res.send(201);
       next();
     });
   });
 
   server.get("/todos", (req, res, next) => {
-    Todo.apiQuery(req.params, async (err, doc) => { 
+    Todo.apiQuery(req.params, async (err, doc) => {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
       }
-
+      doc.message = 'Done'
       res.send(doc);
       next();
       // return await SomePromise.work( req.parms.id );
     });
   });
-
-
-  // server.get(
-  //   "/todos",
-  //   wrap(async function(req, res, next) {
-  //     throw new Error();
-  //   })
-  // );
 
   server.get("/todos/:id", (req, res, next) => {
     Todo.findOne({ _id: req.params.id }, async (err, doc) => {
@@ -113,5 +94,12 @@ module.exports = function(server) {
       res.send(204);
       next();
     });
+  });
+
+  server.get("/render", (req, res, next) => {
+    console.log('HERE')
+    var doc = '<p>hello</p>';
+    res.send(200);
+    next();
   });
 };
