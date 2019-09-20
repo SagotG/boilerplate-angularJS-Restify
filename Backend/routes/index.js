@@ -1,6 +1,8 @@
-var fs = require('fs');
+var fs = require("fs");
+const restify = require("restify");
 const errors = require("restify-errors");
 const Todo = require("../models/todo");
+var path = require("path");
 
 module.exports = function(server) {
   server.post("/todos", (req, res, next) => {
@@ -97,13 +99,15 @@ module.exports = function(server) {
   });
 
   server.get("/render", (req, res, next) => {
-    var body =  fs.readFileSync('index.html', 'utf8');
-    console.log(body)
-    res.writeHead(200, {
-      "Content-Length": Buffer.byteLength(body),
-      "Content-Type": "text/html"
+    fs.readFile(__dirname + "/index.html", (err, data) => {
+      if (err) {
+        next(err);
+        return;
+      }
+      res.setHeader("Content-Type", "text/html");
+      res.writeHead(200);
+      res.end(data);
+      next();
     });
-    res.write(body);
-    res.end();
   });
 };

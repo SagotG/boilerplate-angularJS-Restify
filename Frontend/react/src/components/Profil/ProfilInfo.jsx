@@ -1,5 +1,5 @@
 import React from 'react';
-import UserService from '../../services/user-service';
+import Service from '../../services/service';
 import { Alert, Button, Card, CardBody, Container, Input } from 'reactstrap';
 
 class ProfilInfo extends React.Component {
@@ -30,7 +30,7 @@ class ProfilInfo extends React.Component {
     else if (NewPassword === "" || RetypePassword === "") {
       this.setState({ message: "Password data field are empty", display: true });
     } else {
-      UserService.resetPassword(CurrentPassword, NewPassword).then((value) => {
+      Service.resetPassword(CurrentPassword, NewPassword).then((value) => {
         if (value.status === false) {
           this.setState({ message: value.message, display: true, displaySuccess: false });
         }

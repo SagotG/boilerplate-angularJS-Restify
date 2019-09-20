@@ -2,7 +2,7 @@ import ServiceWorker from "../../serviceWorker/serviceWorker";
 import { $q } from "@uirouter/core";
 import axios from "axios";
 
-const API_ENDPOINT = "http://localhost:3000";
+const API_ENDPOINT = process.env.API_ENDPOINT;
 
 export const TaskComponent = {
   bindings: { props: "=" },

@@ -14,7 +14,7 @@ import {
   ModalFooter,
   Row
 } from "reactstrap";
-import ServiceWorker from "../../services/user-service";
+import ServiceWorker from "../../services/service";
 
 class Task extends Component {
   constructor(props) {
