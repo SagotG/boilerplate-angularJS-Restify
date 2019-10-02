@@ -3,6 +3,7 @@
  */
 const config = require("./config");
 const restify = require("restify");
+var json2xls = require('json2xls');
 const mongoose = require("mongoose");
 const restifyPlugins = require("restify-plugins");
 const corsMiddleware = require("restify-cors-middleware");
@@ -30,7 +31,9 @@ server.use(restifyPlugins.acceptParser(server.acceptable));
 server.use(restifyPlugins.queryParser({ mapParams: true }));
 server.use(restifyPlugins.fullResponse());
 server.pre(cors.preflight);  
-server.use(cors.actual);  
+server.use(cors.actual);
+server.use(json2xls.middleware);
+
 /**
  * Start Server, Connect to DB & Require Routes
  */

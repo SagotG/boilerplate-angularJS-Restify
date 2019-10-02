@@ -12,6 +12,7 @@
   "dependencies": {
     "@gilbertco/restify-async-wrap": "^0.1.2",
     "express": "^4.16.4",
+    "json2xls": "^0.1.2",
     "mongoose": "^5.7.1",
     "mongoose-string-query": "^0.2.7",
     "mongoose-timestamp": "^0.6.0",

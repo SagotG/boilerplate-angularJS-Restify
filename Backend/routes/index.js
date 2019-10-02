@@ -1,32 +1,34 @@
 var fs = require("fs");
+
 const restify = require("restify");
 const errors = require("restify-errors");
-const Todo = require("../models/todo");
+const Campaigns = require("../models/campaign");
 var path = require("path");
+var json2xls = require('json2xls');
 
-module.exports = function(server) {
-  server.post("/todos", (req, res, next) => {
+module.exports = function (server) {
+  server.post("/campaigns", (req, res, next) => {
     if (!req.is("application/json")) {
       return next(new errors.InvalidContentError("Expects 'application/json'"));
     }
 
     let data = req.body || {};
 
-    let todo = new Todo(data);
+    let campaign = new Campaigns(data);
     console.log(data);
-    todo.save(function(err) {
+    campaign.save(function (err) {
       if (err) {
         console.error(err);
         return next(new errors.InternalError(err.message));
       }
 
-      res.send(201);
+      res.send(201, JSON.stringify({ status: "success", message: "Campagne créé avec succès" }));
       next();
     });
   });
 
-  server.get("/todos", (req, res, next) => {
-    Todo.apiQuery(req.params, async (err, doc) => {
+  server.get("/campaigns", (req, res, next) => {
+    Campaigns.apiQuery(req.params, async (err, doc) => {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -38,8 +40,8 @@ module.exports = function(server) {
     });
   });
 
-  server.get("/todos/:id", (req, res, next) => {
-    Todo.findOne({ _id: req.params.id }, async (err, doc) => {
+  server.get("/campaigns/:id", (req, res, next) => {
+    Campaigns.findOne({ _id: req.params.id }, async (err, doc) => {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -51,7 +53,7 @@ module.exports = function(server) {
     });
   });
 
-  server.put("/todos/:id", (req, res, next) => {
+  server.put("/campaigns/:id", (req, res, next) => {
     if (!req.is("application/json")) {
       return next(new errors.InvalidContentError("Expects 'application/json'"));
     }
@@ -62,19 +64,19 @@ module.exports = function(server) {
       data = Object.assign({}, data, { _id: req.params.id });
     }
 
-    Todo.findOne({ _id: req.params.id }, (err, doc) => {
+    Campaigns.findOne({ _id: req.params.id }, (err, doc) => {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
       } else if (!doc) {
         return next(
           new errors.ResourceNotFoundError(
-            "The resource you requested could not be found."
+            "Cette resource ne peut être trouvé."
           )
         );
       }
 
-      Todo.update({ _id: data._id }, data, err => {
+      Campaigns.update({ _id: data._id }, data, err => {
         if (err) {
           console.error(err);
           return next(new errors.InvalidContentError(err.errors.name.message));
@@ -86,8 +88,8 @@ module.exports = function(server) {
     });
   });
 
-  server.del("/todos/:todo_id", (req, res, next) => {
-    Todo.remove({ _id: req.params.todo_id }, function(err) {
+  server.del("/campaigns/:campaign_id", (req, res, next) => {
+    Campaigns.remove({ _id: req.params.campaign_id }, function (err) {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -98,16 +100,31 @@ module.exports = function(server) {
     });
   });
 
+
   server.get("/render", (req, res, next) => {
-    fs.readFile(__dirname + "/index.html", (err, data) => {
-      if (err) {
-        next(err);
-        return;
-      }
-      res.setHeader("Content-Type", "text/html");
-      res.writeHead(200);
-      res.end(data);
-      next();
+    var json = {
+      foo: 'bar',
+      qux: 'moo',
+      poo: 123,
+      stux: new Date()
+    }
+
+    //export only the field 'poo'
+    var xls = json2xls(json, {
+      fields: ['poo']
     });
+
+    //export only the field 'poo' as string
+    var xls = json2xls(json, {
+      fields: { poo: 'string' }
+    });
+
+    let file = fs.writeFileSync('data.xlsx', xls, 'binary');
+    res.send({
+      code: 200
+    }),
+    res.write(file)
+    next();
   });
+
 };
