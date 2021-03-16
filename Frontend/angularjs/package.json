@@ -3,7 +3,7 @@
   "version": "3.2.0",
   "license": "MIT",
   "devDependencies": {
-    "angular": "^1.6.1",
+    "angular": "^1.8.0",
     "angular-ui-router": "^1.0.0-rc.1",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
